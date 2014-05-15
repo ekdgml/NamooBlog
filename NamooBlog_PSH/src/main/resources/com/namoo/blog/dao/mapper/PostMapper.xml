@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.namoo.blog.dao.mapper.PostMapper">
+
+	<resultMap type="Post" id="result-post">
+		<id     property="postId"       column="post_id"  javaType="int" />
+		<result property="subject"  column="subject"  javaType="string"/>
+		<result property="contents" column="contents" javaType="string"/>
+		<result property="type" column="post_type" javaType="PostType" jdbcType="CHAR"/>
+		
+<!-- 		<collection property="comments" ofType="Comment"> -->
+<!-- 			<id     property="commentId"        column="comment_id" javaType="int" /> -->
+<!-- 			<result property="comment"   column="comment"    javaType="string"/> -->
+<!-- 			<result property="commenter" column="author_id"  javaType="string"/> -->
+			
+<!-- 			<association property="commenter" javaType="Author"> -->
+<!-- 				<id property="id" column="commenter_id" javaType="string"/> -->
+<!-- 				<result property="name"  column="commenter_nm" javaType="string"/> -->
+<!-- 			</association>		 -->
+<!-- 		</collection> -->
+
+		<collection property="comments" 
+			select="com.namoo.blog.dao.mapper.PostMapper.selectCommentsByPostId"
+			column="post_id" />
+	</resultMap>
+	
+	<insert id="insertPost" parameterType="map" useGeneratedKeys="true" keyProperty="post.postId">
+		INSERT INTO post_tb (
+			subject
+			, contents
+			, post_type
+			, blog_id 
+		) VALUES (
+			 #{post.subject}
+			, #{post.contents}
+			, #{post.type, javaType=PostType, jdbcType=CHAR}
+			, #{blogId}
+		)
+	</insert>
+	
+	<select id="selectPost" parameterType="int" resultMap="result-post">
+		SELECT a.post_id 
+			, a.subject
+			, a.contents
+			, a.post_type
+			, a.blog_id
+		FROM post_tb a
+		WHERE a.post_id = #{postId}
+	</select>
+	
+	<select id="selectAllPosts" parameterType="int" resultMap="result-post">
+		SELECT post_id
+			, subject
+			, contents
+			, a.post_type
+			, blog_id 
+		FROM post_tb 
+		WHERE blog_id = #{blogId}
+	</select>
+	
+	<update id="updatePost" parameterType="Post">
+		UPDATE post_tb 
+		SET subject = #{subject}
+			, contents = #{contents}
+			, post_type = #{type, javaType=PostType, jdbcType=CHAR}
+		WHERE post_id = #{postId}
+	</update>
+	
+	<delete id="deletePost" parameterType="int">
+		DELETE FROM post_tb WHERE post_id = #{postId}
+	</delete>
+	
+	<delete id="deleteAllPosts">
+		DELETE FROM post_tb
+	</delete>
+	
+	<!-- Comment -->
+	<resultMap type="Comment" id="result-comment-list">
+		<id     property="commentId" column="comment_id" javaType="int"/>
+		<result property="comment"   column="comment"    javaType="string"/> 
+ 		
+ 		<association property="commenter" javaType="Author"> 
+			<id     property="id"    column="author_id" javaType="string"/> 
+			<result property="name"  column="author_nm" javaType="string"/> 
+		</association>
+	</resultMap>
+	 
+	<insert id="insertComment" parameterType="map" useGeneratedKeys="true" keyProperty="comment.commentId">
+		INSERT INTO comment_tb (
+			comment
+			, post_id 
+			, author_id  
+		) VALUES (
+			 #{comment.comment}
+			, #{postId}
+			, #{comment.commenter.id}
+		)
+	</insert>
+	
+	<select id="selectCommentsByPostId" parameterType="int" resultMap="result-comment-list">
+		SELECT a.comment_id
+			, a.comment
+			, a.author_id
+			, b.author_nm
+		FROM comment_tb a
+		LEFT JOIN author_tb b ON a.author_id = b.author_id
+		WHERE post_id = #{postId}
+	</select>
+	
+	<update id="updateComment" parameterType="Comment">
+		UPDATE comment_tb 
+		SET comment = #{comment}
+		WHERE comment_id = #{commentId}
+	</update>
+	
+	<delete id="deleteComment" parameterType="int">
+		DELETE FROM comment_tb WHERE comment_id = #{commentId}
+	</delete>
+	
+	<delete id="deleteAllComments">
+		DELETE FROM comment_tb
+	</delete>
+</mapper>
