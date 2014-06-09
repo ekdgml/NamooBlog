@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    
+    <author_tb author_id="hyunohkim" author_nm="김현오" email="hyunohkim@a.co.kr" password="1234" />
+    <author_tb author_id="haroldkim" author_nm="헤롤드" email="haroldkim@a.co.kr" password="1234" />
+    <author_tb author_id="gdohong"   author_nm="홍길동" email="gdohong@a.co.kr"   password="1234" />
+    
+    <blog_tb blog_id="1" blog_nm="firstBlog" author_id="hyunohkim" />
+    <blog_tb blog_id="2" blog_nm="secondBlog" author_id="hyunohkim" />
+    <blog_tb blog_id="3" blog_nm="thirdBlog" author_id="haroldkim" />
+    <blog_tb blog_id="4" blog_nm="fourthBlog" author_id="gdohong" />
+    
+</dataset>

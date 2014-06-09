@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    
+    <settings>
+        <setting name="lazyLoadingEnabled" value="true"/>
+    </settings>
+    
+    <typeAliases>
+        <typeAlias type="com.namoo.blog.domain.Author" alias="Author" />
+        <typeAlias type="com.namoo.blog.domain.Blog" alias="Blog" />
+        <typeAlias type="com.namoo.blog.domain.Post" alias="Post" />
+        <typeAlias type="com.namoo.blog.domain.Comment" alias="Comment" />
+        <typeAlias type="com.namoo.blog.domain.PostType" alias="PostType" />
+    </typeAliases>
+    
+    <typeHandlers>
+        <typeHandler javaType="PostType" jdbcType="CHAR"
+            handler="com.namoo.blog.dao.handler.PostTypeToStringTypeHandler"/>
+    </typeHandlers>
+    
+</configuration>

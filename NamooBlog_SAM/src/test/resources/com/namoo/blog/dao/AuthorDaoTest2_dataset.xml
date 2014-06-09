@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	
+	<author_tb author_id="ekdgml" author_nm="박상희" email="ekdgml@naver.com" password="asdf" />
+	<author_tb author_id="hong"   author_nm="홍길동" email="hong@naver.com"   password="aaaa" />
+	<author_tb author_id="wntjd"  author_nm="이주성" email="wntjd@nate.com"   password="1234" />
+	
+</dataset>

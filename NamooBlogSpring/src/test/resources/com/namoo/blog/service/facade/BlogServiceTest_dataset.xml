@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    
+    <author_tb author_id="hyunohkim" author_nm="김현오" email="hyunohkim@a.co.kr" password="1234" />
+    <author_tb author_id="haroldkim" author_nm="헤롤드" email="haroldkim@a.co.kr" password="1234" />
+    <author_tb author_id="gdohong"   author_nm="홍길동" email="gdohong@a.co.kr"   password="1234" />
+    
+    <blog_tb blog_id="1" blog_nm="firstBlog" author_id="hyunohkim" />
+    <blog_tb blog_id="2" blog_nm="secondBlog" author_id="hyunohkim" />
+    <blog_tb blog_id="3" blog_nm="thirdBlog" author_id="haroldkim" />
+    <blog_tb blog_id="4" blog_nm="fourthBlog" author_id="gdohong" />
+    
+    <post_tb post_id="1" subject="firstPost" contents="firstPostContents" post_type="O" blog_id="1" />
+    <post_tb post_id="2" subject="secondPost" contents="secondPostContents" post_type="P" blog_id="1" />
+    <post_tb post_id="3" subject="thirdPost" contents="thirdPostContents" post_type="O" blog_id="2" />
+    <post_tb post_id="4" subject="fourthPost" contents="fourthPostContents" post_type="P" blog_id="3" />
+    <post_tb post_id="5" subject="fifthPost" contents="fifthPostContents" post_type="D" blog_id="4" />
+    
+    <comment_tb comment_id="1" comment="첫번째코멘트" post_id="1" author_id="hyunohkim" />
+    <comment_tb comment_id="2" comment="두번째코멘트" post_id="1" author_id="haroldkim" />
+    <comment_tb comment_id="3" comment="세번째코멘트" post_id="1" author_id="gdohong" />
+    <comment_tb comment_id="4" comment="네번째코멘트" post_id="2" author_id="hyunohkim" />
+    <comment_tb comment_id="5" comment="다섯번째코멘트" post_id="3" author_id="haroldkim" />
+    <comment_tb comment_id="6" comment="여섯번째코멘트" post_id="4" author_id="gdohong" />
+    <comment_tb comment_id="7" comment="일곱번째코멘트" post_id="4" author_id="gdohong" />
+    
+</dataset>

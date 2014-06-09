@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+<mapper namespace="com.namoo.blog.dao.mapper.PostMapper">
+    
+    <!-- ResultMap for Post -->
+    <resultMap type="Post" id="result-post">
+        <id     property="postId"   column="post_id"   javaType="int" />
+        <result property="subject"  column="subject"   javaType="string" />
+        <result property="contents" column="contents"  javaType="string" />
+        <result property="type"     column="post_type" javaType="PostType" jdbcType="CHAR" />
+        
+        <!-- 
+        <collection property="comments" ofType="Comment">
+            <id     property="commentId" column="comment_id" javaType="int" />
+            <result property="comment"   column="comment"    javaType="string" />
+            <association property="commenter" javaType="Author">
+                <id     property="id"   column="commenter_id"   javaType="string" />
+                <result property="name" column="commenter_name" javaType="string" />
+            </association>
+        </collection>
+        -->
+        
+        <collection property="comments" 
+            select="com.namoo.blog.dao.mapper.PostMapper.selectCommentsByPostId" 
+            column="post_id" />
+          
+    </resultMap>
+    
+    <!-- ResultMap for Post List -->
+    <resultMap type="Post" id="result-posts">
+        <id     property="postId"   column="post_id"   javaType="int" />
+        <result property="subject"  column="subject"   javaType="string" />
+        <result property="contents" column="contents"  javaType="string" />
+        <result property="type"     column="post_type" javaType="PostType" jdbcType="CHAR" />        
+    </resultMap>
+    
+    <select id="selectPost" parameterType="int" resultMap="result-post">
+        SELECT a.post_id
+        	, a.subject
+        	, a.contents
+        	, a.post_type
+        FROM post_tb a
+        WHERE a.post_id = #{postId}
+        ORDER BY a.post_id DESC
+    </select>
+    
+    <select id="selectAllPosts" parameterType="map" resultMap="result-posts">
+        SELECT post_id
+        	, subject
+        	, contents
+        	, post_type
+        FROM post_tb
+        WHERE blog_id = #{blogId}
+        ORDER BY post_id DESC
+        LIMIT #{pageInfo.startIndex}, #{pageInfo.countPerPage}
+    </select>
+    
+    <!-- 해당 블로그의 포스팅 갯수 조회 -->
+    <select id="countAllPosts" parameterType="int" resultType="int">
+    	SELECT COUNT(*) 
+    	FROM post_tb
+    	WHERE blog_id = #{blogId}
+    </select>
+    
+    <insert id="insertPost" parameterType="map" useGeneratedKeys="true" keyProperty="post.postId">
+        INSERT INTO post_tb (
+        	subject
+        	, contents
+        	, blog_id
+        	, post_type
+        ) VALUES (
+        	#{post.subject}
+        	, #{post.contents}
+        	, #{blogId}
+        	, #{post.type,javaType=PostType,jdbcType=CHAR}
+        )
+    </insert>
+    
+    <update id="updatePost" parameterType="Post">
+        UPDATE post_tb
+        SET
+        	subject = #{subject}
+        	, contents = #{contents}
+        	, post_type = #{type,javaType=PostType,jdbcType=CHAR}
+        WHERE
+        	post_id = #{postId}
+    </update>
+    
+    <delete id="deletePost" parameterType="int">
+        DELETE FROM post_tb WHERE post_id = #{postId}
+    </delete>
+    
+    <!-- Comment -->
+    <resultMap type="Comment" id="result-comment-list">
+		<id     property="commentId" column="comment_id" javaType="int" />
+		<result property="comment"   column="comment"    javaType="string" />
+		
+		<association property="commenter" javaType="Author">
+		    <id     property="id"   column="author_id"   javaType="string" />
+		    <result property="name" column="author_nm"   javaType="string" />
+		    <result property="email" column="email"      javaType="string" />
+		</association>
+    </resultMap>
+    
+    <select id="selectCommentsByPostId" parameterType="int" resultMap="result-comment-list">
+        SELECT a.comment_id
+        	, a.comment
+        	, a.author_id
+        	, b.author_nm
+        	, b.email
+        FROM comment_tb a
+        LEFT JOIN author_tb b on a.author_id = b.author_id
+        WHERE post_id = #{postId}
+        ORDER BY a.comment_id DESC
+    </select>
+    
+    <insert id="insertComment" parameterType="map" >
+        INSERT INTO comment_tb (
+        	comment
+        	, author_id
+        	, post_id
+        ) VALUES (
+        	#{comment.comment}
+        	, #{comment.commenter.id}
+        	, #{postId}
+        )
+    </insert>
+    
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM comment_tb WHERE comment_id = #{commentId}
+    </delete>
+    
+    <delete id="deleteAllComments" parameterType="int">
+        DELETE FROM comment_tb WHERE post_id = #{postId}
+    </delete>
+
+</mapper>

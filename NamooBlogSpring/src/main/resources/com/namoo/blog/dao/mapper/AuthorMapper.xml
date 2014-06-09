@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+<mapper namespace="com.namoo.blog.dao.mapper.AuthorMapper">
+    
+    <resultMap type="Author" id="result-author">
+        <constructor>
+            <idArg column="id" javaType="string" />
+        </constructor>
+        <result property="name"     column="name"     javaType="string" />
+        <result property="email"    column="email"    javaType="string" />
+        <result property="password" column="password" javaType="string" />
+    </resultMap>
+    
+    <select id="selectAuthor" parameterType="string" resultMap="result-author">
+        SELECT author_id as id
+        	, author_nm  as name
+        	, email
+        	, password
+        FROM author_tb
+        WHERE author_id = #{id}   
+    </select>
+    
+    <select id="selectAuthorsByIds" parameterType="list" resultMap="result-author">
+        SELECT author_id as id
+        	, author_nm  as name
+        	, email
+        	, password
+        FROM author_tb
+        WHERE author_id IN 
+        <foreach collection="array" open="(" close=")" separator="," item="value">
+            #{value}
+        </foreach>
+    </select>
+    
+	<select id="selectAuthorsByName" parameterType="string" resultMap="result-author">
+        SELECT author_id as id
+        	, author_nm  as name
+        	, email
+        	, password
+        FROM author_tb
+        <choose>
+	        <when test="value != null">
+	            WHERE author_nm LIKE '${value}%'     
+	        </when>
+	        <otherwise>
+				WHERE 1 = 2
+	        </otherwise>
+        </choose>
+	    
+	</select>    
+    
+    <insert id="insertAuthor" parameterType="Author">
+        INSERT INTO author_tb (
+        	author_id
+        	, author_nm
+        	, email
+        	, password
+        
+        ) VALUES (
+        	#{id}
+        	, #{name}
+        	, #{email}
+        	, #{password}
+        )
+    </insert>
+    
+    <update id="updateAuthor" parameterType="Author">
+        UPDATE author_tb
+        <set>
+            <if test="name != null">author_nm = #{name},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="password != null">password = #{password}</if>
+        </set>
+        WHERE
+        	author_id = #{id}
+    </update>
+    
+    <delete id="deleteAuthor" parameterType="string">
+        DELETE FROM author_tb WHERE author_id = #{id}
+    </delete>
+
+</mapper>
